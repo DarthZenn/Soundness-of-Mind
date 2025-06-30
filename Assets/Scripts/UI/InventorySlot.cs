@@ -33,7 +33,6 @@ public class InventorySlot : MonoBehaviour
         currentItem = item;
         quantity = count;
         icon.sprite = item.icon;
-        icon.enabled = true;
         UpdateUI();
     }
 
@@ -63,7 +62,6 @@ public class InventorySlot : MonoBehaviour
         currentItem = null;
         quantity = 0;
         icon.sprite = null;
-        icon.enabled = false;
         quantityText.text = "";
     }
 
@@ -86,6 +84,26 @@ public class InventorySlot : MonoBehaviour
     {
         if (buttonColor != null)
             buttonColor.color = isSelected ? selectedColor : defaultColor;
+    }
+
+    public void RemoveOne()
+    {
+        if (quantity <= 1)
+        {
+            ClearSlot();
+            inventoryManager.ClearItemInfo();
+            inventoryManager.HideOptionsPanel();
+        }
+        else
+        {
+            quantity--;
+            UpdateUI();
+        }
+    }
+    
+    public int GetQuantity()
+    {
+        return quantity;
     }
 
     public ItemData GetItem() => currentItem;

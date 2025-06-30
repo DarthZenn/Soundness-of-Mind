@@ -6,8 +6,8 @@ public enum ItemType
 {
     Handgun,
     Melee,
-    Ammo,
-    Consumable,
+    HandgunAmmo,
+    HealingConsumable,
 }
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
@@ -18,5 +18,6 @@ public class ItemData : ScriptableObject
     public Sprite icon;
     public int maxStack = 1;
     public ItemType itemType;
+    public int healAmount = 0;
     public GameObject worldPrefab;
 }

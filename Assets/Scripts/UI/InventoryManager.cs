@@ -101,8 +101,11 @@ public class InventoryManager : MonoBehaviour
         {
             if (!slots[i].IsEmpty && slots[i].GetItem() == item && item.maxStack > 1)
             {
-                slots[i].AddQuantity(1);
-                return true;
+                if (slots[i].GetQuantity() < item.maxStack)
+                {
+                    slots[i].AddQuantity(1);
+                    return true;
+                }
             }
         }
 
@@ -118,6 +121,7 @@ public class InventoryManager : MonoBehaviour
         Debug.Log("Inventory Full! Could not add item: " + item.itemName);
         return false;
     }
+
 
     public void DisplayItemInfo(ItemData item)
     {
@@ -162,6 +166,28 @@ public class InventoryManager : MonoBehaviour
         if (selectedSlot == null || selectedSlot.IsEmpty) return;
 
         ItemData item = selectedSlot.GetItem();
+
+        if (item.itemType == ItemType.HealingConsumable)
+        {
+            PlayerStats playerHealth = FindObjectOfType<PlayerStats>();
+            if (playerHealth != null)
+            {
+                int current = playerHealth.GetCurrentHealth();
+                int max = playerHealth.GetMaxHealth();
+
+                if (current < max)
+                {
+                    playerHealth.Heal(item.healAmount);
+                    selectedSlot.RemoveOne();
+                    Debug.Log("Used healing item: " + item.itemName);
+                }
+                else
+                {
+                    Debug.Log("Player is already at full health. Can't use " + item.itemName);
+                }
+            }
+            return;
+        }
 
         if (item != null && item.worldPrefab != null)
         {
