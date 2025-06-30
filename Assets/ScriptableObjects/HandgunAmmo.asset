@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80f5f6c2126dc5b458c35feaeb2357da, type: 3}
+  m_Name: HandgunAmmo
+  m_EditorClassIdentifier: 
+  itemName: Handgun Ammo
+  description: Ammo for your handgun.
+  icon: {fileID: 21300000, guid: 61be08486620cb44db7e024dd3804c01, type: 3}
+  maxStack: 50
+  quantityPerPickup: 10
+  itemType: 2
+  healAmount: 0
+  worldPrefab: {fileID: 942388548855319677, guid: deaf0407a2ae6684eb584df542b77e1f, type: 3}

@@ -17,6 +17,7 @@ public class ItemData : ScriptableObject
     public string description;
     public Sprite icon;
     public int maxStack = 1;
+    public int quantityPerPickup = 1;
     public ItemType itemType;
     public int healAmount = 0;
     public GameObject worldPrefab;

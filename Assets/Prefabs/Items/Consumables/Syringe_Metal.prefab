@@ -4932,6 +4932,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5517984822861624349}
   - component: {fileID: 125451702828037906}
+  - component: {fileID: 7272867867807336651}
   m_Layer: 0
   m_Name: Syringe_Metal
   m_TagString: Pickable
@@ -4977,3 +4978,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.025, y: 0.025, z: 0.175}
   m_Center: {x: 0, y: 0, z: 0.03}
+--- !u!114 &7272867867807336651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8943585755249214459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bc7a045d426306489531107477fbe65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item: {fileID: 11400000, guid: 05c6942852487174896bf52122b633f2, type: 2}

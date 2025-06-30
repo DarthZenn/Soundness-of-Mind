@@ -110,7 +110,6 @@ public class ZombieAI : MonoBehaviour
     public void DealDamage()
     {
         Debug.Log("Zombie hits the player!");
-        // Insert player damage logic here.
     }
 
     public void EndAttack()

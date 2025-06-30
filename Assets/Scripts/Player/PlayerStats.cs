@@ -10,7 +10,7 @@ public class PlayerStats : MonoBehaviour
 
     void Start()
     {
-        currentHealth = maxHealth - 80;
+        currentHealth = maxHealth;
     }
 
     public void TakeDamage(int amount)

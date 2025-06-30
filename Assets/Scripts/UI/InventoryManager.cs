@@ -97,31 +97,43 @@ public class InventoryManager : MonoBehaviour
 
     public bool AddItem(ItemData item)
     {
+        int quantityToAdd = item.quantityPerPickup;
+
         for (int i = 0; i < slots.Length; i++)
         {
             if (!slots[i].IsEmpty && slots[i].GetItem() == item && item.maxStack > 1)
             {
-                if (slots[i].GetQuantity() < item.maxStack)
+                int currentQty = slots[i].GetQuantity();
+                int availableSpace = item.maxStack - currentQty;
+
+                if (availableSpace > 0)
                 {
-                    slots[i].AddQuantity(1);
-                    return true;
+                    int addAmount = Mathf.Min(quantityToAdd, availableSpace);
+                    slots[i].AddQuantity(addAmount);
+                    quantityToAdd -= addAmount;
+
+                    if (quantityToAdd <= 0)
+                        return true;
                 }
             }
         }
 
-        for (int i = 0; i < slots.Length; i++)
+        for (int i = 0; i < slots.Length && quantityToAdd > 0; i++)
         {
             if (slots[i].IsEmpty)
             {
-                slots[i].SetItem(item);
-                return true;
+                int addAmount = Mathf.Min(quantityToAdd, item.maxStack);
+                slots[i].SetItem(item, addAmount);
+                quantityToAdd -= addAmount;
+
+                if (quantityToAdd <= 0)
+                    return true;
             }
         }
 
-        Debug.Log("Inventory Full! Could not add item: " + item.itemName);
+        Debug.Log("Inventory Full! Could not add all of item: " + item.itemName);
         return false;
     }
-
 
     public void DisplayItemInfo(ItemData item)
     {
@@ -189,7 +201,7 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
-        if (item != null && item.worldPrefab != null)
+        if (item.itemType == ItemType.Handgun)
         {
             Transform existingGun = handgunHolder.childCount > 0 ? handgunHolder.GetChild(0) : null;
 
