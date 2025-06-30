@@ -1,66 +1,69 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TankController : MonoBehaviour
 {
     public GameObject player;
-    public bool isMoving;
-    public float horizontalMove;
-    public float verticalMove;
-    public bool isRunning;
-    public bool backwardsCheck;
+    private Animator anim;
 
-    // Update is called once per frame
+    public float walkSpeed;
+    public float runSpeed;
+    public float rotationSpeed;
+
+    private float verticalInput;
+    private float horizontalInput;
+
+    private bool isRunning = false;
+    private bool isMoving = false;
+
+    void Start()
+    {
+        anim = player.GetComponent<Animator>();
+    }
+
     void Update()
     {
-        if (Input.GetKey(KeyCode.LeftShift))
+        verticalInput = Input.GetAxisRaw("Vertical");
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+
+        isRunning = Input.GetKey(KeyCode.LeftShift) && verticalInput > 0;
+
+        HandleMovement();
+        HandleAnimation();
+    }
+
+    void HandleMovement()
+    {
+        isMoving = verticalInput != 0 || horizontalInput != 0;
+
+        float moveSpeed = isRunning ? runSpeed : walkSpeed;
+        float moveAmount = verticalInput * moveSpeed * Time.deltaTime;
+        float rotationAmount = horizontalInput * rotationSpeed * Time.deltaTime;
+
+        player.transform.Rotate(0, rotationAmount, 0);
+
+        player.transform.Translate(0, 0, moveAmount);
+    }
+
+    void HandleAnimation()
+    {
+        if (!isMoving)
         {
-            isRunning = true;
+            anim.Play("Idle");
         }
         else
         {
-            isRunning = false;
-        }
-
-        if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
-        {
-            isMoving = true;
-            if (Input.GetButton("Backward"))
+            if (verticalInput < 0)
             {
-                backwardsCheck = true;
-                player.GetComponent<Animator>().Play("WalkBackward");
+                anim.Play("WalkBackward");
+            }
+            else if (isRunning)
+            {
+                anim.Play("Run");
             }
             else
             {
-                backwardsCheck = false;
-                if (isRunning == false)
-                {
-                    player.GetComponent<Animator>().Play("Walk");
-                }
-                else
-                {
-                    player.GetComponent<Animator>().Play("Run");
-                }
+                anim.Play("Walk");
             }
-
-            if (isRunning == false)
-            {
-                verticalMove = Input.GetAxis("Vertical") * Time.deltaTime * 1;
-            }
-            else if(isRunning == true && backwardsCheck == false)
-            {
-                verticalMove = Input.GetAxis("Vertical") * Time.deltaTime * 4;
-            }
-
-            horizontalMove = Input.GetAxis("Horizontal") * Time.deltaTime * 135;
-            player.transform.Rotate(0, horizontalMove, 0);
-            player.transform.Translate(0, 0, verticalMove);
-        }
-        else
-        {
-            isMoving = false;
-            player.GetComponent<Animator>().Play("Idle");
         }
     }
 }
