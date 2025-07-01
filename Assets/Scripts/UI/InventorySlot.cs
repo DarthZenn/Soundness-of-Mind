@@ -56,7 +56,6 @@ public class InventorySlot : MonoBehaviour
         }
     }
 
-
     public void ClearSlot()
     {
         currentItem = null;
@@ -86,9 +85,13 @@ public class InventorySlot : MonoBehaviour
             buttonColor.color = isSelected ? selectedColor : defaultColor;
     }
 
-    public void RemoveOne()
+    public void RemoveQuantity(int amount = 1)
     {
-        if (quantity <= 1)
+        if (amount <= 0 || quantity <= 0) return;
+
+        quantity -= amount;
+
+        if (quantity <= 0)
         {
             ClearSlot();
             inventoryManager.ClearItemInfo();
@@ -96,11 +99,10 @@ public class InventorySlot : MonoBehaviour
         }
         else
         {
-            quantity--;
             UpdateUI();
         }
     }
-    
+
     public int GetQuantity()
     {
         return quantity;

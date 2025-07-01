@@ -1177,6 +1177,11 @@ MonoBehaviour:
   walkSpeed: 1
   runSpeed: 4
   rotationSpeed: 135
+  handgunHolder: {fileID: 7519860978514474735}
+  gunAudio: {fileID: 0}
+  gunEmptyAudio: {fileID: 0}
+  playerAttackRange: 10
+  playerFieldOfView: 135
 --- !u!114 &6467937684425207957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1202,6 +1207,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  heartBeatMonitor: {fileID: 0}
+  healthNormal: {fileID: 32900000, guid: d53d5b388335aaa4997b2c520fce26bf, type: 3}
+  healthDangerous: {fileID: 32900000, guid: 938da6507df92df41be1663eb752330e, type: 3}
+  healthCritical: {fileID: 32900000, guid: 143ba35c79c79cf4b941ea2f44cb3a44, type: 3}
 --- !u!1 &5348388568942600574
 GameObject:
   m_ObjectHideFlags: 0
@@ -2247,7 +2256,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0.40000004}
-  m_LocalScale: {x: 0.5, y: 2, z: 0.75}
+  m_LocalScale: {x: 0.75, y: 2, z: 0.75}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4890236937653202912}

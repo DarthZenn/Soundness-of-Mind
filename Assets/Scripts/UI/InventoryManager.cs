@@ -190,7 +190,7 @@ public class InventoryManager : MonoBehaviour
                 if (current < max)
                 {
                     playerHealth.Heal(item.healAmount);
-                    selectedSlot.RemoveOne();
+                    selectedSlot.RemoveQuantity(1);
                     Debug.Log("Used healing item: " + item.itemName);
                 }
                 else

@@ -7,6 +7,7 @@ public class ZombieAI : MonoBehaviour
     private NavMeshAgent agent;
     private Animator animator;
 
+    private float defaultSpeed;
     [SerializeField] private float sightRange;
     [SerializeField] private float fieldOfView;
 
@@ -17,14 +18,24 @@ public class ZombieAI : MonoBehaviour
     private float attackTimer;
     private bool isAttacking = false;
 
+    [SerializeField] private int damage;
+
     private enum State { Idle, Chasing, Attacking }
     private State currentState = State.Idle;
+    private PlayerStats playerStats;
+
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         attackTimer = 0f;
+        defaultSpeed = agent.speed;
+
+        if (player != null)
+        {
+            playerStats = player.GetComponent<PlayerStats>();
+        }
     }
 
     void Update()
@@ -94,6 +105,8 @@ public class ZombieAI : MonoBehaviour
         }
         else if (distance <= sightRange && angle <= fieldOfView / 2f)
         {
+            sightRange = 100;
+            fieldOfView = 360;
             currentState = State.Chasing;
         }
         else
@@ -104,18 +117,35 @@ public class ZombieAI : MonoBehaviour
         if (currentState != State.Attacking)
         {
             isAttacking = false;
+
+            if (agent.speed == 0)
+            {
+                agent.speed = defaultSpeed;
+            }
         }
     }
 
+
     public void DealDamage()
     {
-        Debug.Log("Zombie hits the player!");
+        if (playerStats != null)
+        {
+            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+            if (distanceToPlayer <= attackRange)
+            {
+                playerStats.TakeDamage(damage);
+            }
+            else
+            {
+                Debug.Log("Player was too far. Attack missed.");
+            }
+        }
     }
 
     public void EndAttack()
     {
         isAttacking = false;
-        agent.speed = 1;
+        agent.speed = 0.3f;
     }
 
     private void OnDrawGizmosSelected()
