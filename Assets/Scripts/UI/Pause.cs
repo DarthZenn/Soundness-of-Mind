@@ -9,9 +9,9 @@ public class Pause : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonDown("Cancel") && !GlobalControl.isInventoryOpen)
+        if (Input.GetButtonDown("Cancel") && !GlobalControl.Instance.isInventoryOpen)
         {
-            if (GlobalControl.isPause)
+            if (GlobalControl.Instance.isPause)
                 ResumeGame();
             else
                 PauseGame();
@@ -24,7 +24,7 @@ public class Pause : MonoBehaviour
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        GlobalControl.isPause = true;
+        GlobalControl.Instance.isPause = true;
         areaBGM.Pause();
     }
 
@@ -34,7 +34,7 @@ public class Pause : MonoBehaviour
         Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        GlobalControl.isPause = false;
+        GlobalControl.Instance.isPause = false;
         areaBGM.UnPause();
     }
 }

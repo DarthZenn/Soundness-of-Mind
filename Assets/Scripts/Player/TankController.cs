@@ -19,10 +19,10 @@ public class TankController : MonoBehaviour
     private bool isAiming = false;
     [SerializeField] private AudioSource gunAudio;
     [SerializeField] private AudioSource gunEmptyAudio;
-    private float fireTimer = 0f;
-    private int currentAmmo = 0;
-    private int reserveAmmo = 0;
-    private int maxAmmo = 0;
+    private float fireTimer;
+    private int currentAmmo;
+    private int reserveAmmo;
+    private int maxAmmo;
 
     [SerializeField] private float playerAttackRange;
     [SerializeField] private float playerFieldOfView;
@@ -30,6 +30,15 @@ public class TankController : MonoBehaviour
     void Start()
     {
         anim = player.GetComponent<Animator>();
+
+        if (GlobalControl.Instance != null && GlobalControl.Instance.currentAmmo >= 0)
+        {
+            currentAmmo = GlobalControl.Instance.currentAmmo;
+        }
+        else
+        {
+            currentAmmo = maxAmmo;
+        }
     }
 
     void Update()
@@ -70,34 +79,6 @@ public class TankController : MonoBehaviour
         }
     }
 
-    /*    void HandleAnimation()
-        {
-            if (isAiming)
-            {
-                anim.Play("HandgunAim");
-                return;
-            }
-            if (!isMoving)
-            {
-                anim.Play("Idle");
-            }
-            else
-            {
-                if (verticalInput < 0)
-                {
-                    anim.Play("WalkBackward");
-                }
-                else if (isRunning)
-                {
-                    anim.Play("Run");
-                }
-                else
-                {
-                    anim.Play("Walk");
-                }
-            }
-        }*/
-
     void HandleAnimation()
     {
         float speed = 0f;
@@ -136,57 +117,6 @@ public class TankController : MonoBehaviour
         anim.SetFloat("Speed", speed);
     }
 
-    /*void CheckAimingMode()
-    {
-        if (handgunHolder.childCount > 0)
-        {
-            Transform gun = handgunHolder.GetChild(0);
-            ItemPickup pickup = gun.GetComponent<ItemPickup>();
-            ItemData item = pickup != null ? pickup.item : null;
-
-            if (item != null && item.itemType == ItemType.Handgun)
-            {
-                isAiming = Input.GetMouseButton(1);
-
-                if (maxAmmo != item.maxAmmo)
-                {
-                    maxAmmo = item.maxAmmo;
-                    currentAmmo = maxAmmo;
-                    reserveAmmo = CountAmmoInInventory();
-                }
-
-                if (Input.GetButtonDown("Reload") && isAiming)
-                {
-                    Reload();
-                }
-
-                if (isAiming)
-                {
-                    fireTimer -= Time.deltaTime;
-
-                    if (Input.GetMouseButtonDown(0) && fireTimer <= 0f)
-                    {
-                        if (currentAmmo > 0)
-                        {
-                            fireTimer = item.fireRate;
-                            FireGun();
-                        }
-                        else
-                        {
-                            fireTimer = item.fireRate;
-                            gunEmptyAudio.Play();
-                            Debug.Log("Click! Out of ammo, dummy.");
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
-            isAiming = false;
-        }
-    }*/
-
     void CheckAimingMode()
     {
         bool holdingGun = false;
@@ -205,9 +135,13 @@ public class TankController : MonoBehaviour
                 if (maxAmmo != item.maxAmmo)
                 {
                     maxAmmo = item.maxAmmo;
-                    currentAmmo = maxAmmo;
+
+                    if (currentAmmo <= 0)
+                        currentAmmo = maxAmmo;
+
                     reserveAmmo = CountAmmoInInventory();
                 }
+
 
                 if (Input.GetButtonDown("Reload") && isAiming)
                 {
@@ -395,6 +329,8 @@ public class TankController : MonoBehaviour
         }
     }
 
+    public int GetCurrentAmmo() => currentAmmo;
+
     void OnDrawGizmosSelected()
     {
         if (player == null) return;
@@ -413,5 +349,4 @@ public class TankController : MonoBehaviour
         Gizmos.DrawRay(player.transform.position, leftRayDirection);
         Gizmos.DrawRay(player.transform.position, rightRayDirection);
     }
-
 }

@@ -3,7 +3,8 @@ using UnityEngine.AI;
 
 public class ZombieAI : MonoBehaviour
 {
-    [SerializeField] private Transform player;
+    private GameObject player;
+    private Transform playerTransform;
     private NavMeshAgent agent;
     private Animator animator;
 
@@ -27,20 +28,22 @@ public class ZombieAI : MonoBehaviour
 
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
+        playerTransform = player.transform;
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         attackTimer = 0f;
         defaultSpeed = agent.speed;
 
-        if (player != null)
+        if (playerTransform != null)
         {
-            playerStats = player.GetComponent<PlayerStats>();
+            playerStats = playerTransform.GetComponent<PlayerStats>();
         }
     }
 
     void Update()
     {
-        if (player == null) return;
+        if (playerTransform == null) return;
 
         attackTimer -= Time.deltaTime;
 
@@ -68,8 +71,8 @@ public class ZombieAI : MonoBehaviour
 
     void HandleChasing()
     {
-        Vector3 directionToPlayer = (player.position - transform.position).normalized;
-        Vector3 offsetTarget = player.position - directionToPlayer * (attackRange - stopOffset);
+        Vector3 directionToPlayer = (playerTransform.position - transform.position).normalized;
+        Vector3 offsetTarget = playerTransform.position - directionToPlayer * (attackRange - stopOffset);
         agent.SetDestination(offsetTarget);
 
         if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
@@ -81,7 +84,7 @@ public class ZombieAI : MonoBehaviour
     void HandleAttacking()
     {
         agent.SetDestination(transform.position);
-        transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
+        transform.LookAt(new Vector3(playerTransform.position.x, transform.position.y, playerTransform.position.z));
         animator.SetBool("isWalking", false);
 
         if (!isAttacking && attackTimer <= 0f)
@@ -95,8 +98,8 @@ public class ZombieAI : MonoBehaviour
 
     void CheckTransitions()
     {
-        float distance = Vector3.Distance(transform.position, player.position);
-        Vector3 dirToPlayer = (player.position - transform.position).normalized;
+        float distance = Vector3.Distance(transform.position, playerTransform.position);
+        Vector3 dirToPlayer = (playerTransform.position - transform.position).normalized;
         float angle = Vector3.Angle(transform.forward, dirToPlayer);
 
         if (distance <= attackRange && angle <= fieldOfView / 2f)
@@ -130,7 +133,7 @@ public class ZombieAI : MonoBehaviour
     {
         if (playerStats != null)
         {
-            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+            float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
             if (distanceToPlayer <= attackRange)
             {
                 playerStats.TakeDamage(damage);
@@ -145,7 +148,7 @@ public class ZombieAI : MonoBehaviour
     public void EndAttack()
     {
         isAttacking = false;
-        agent.speed = 0.3f;
+        agent.speed = defaultSpeed;
     }
 
     private void OnDrawGizmosSelected()

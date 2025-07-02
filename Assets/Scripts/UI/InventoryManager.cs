@@ -25,13 +25,30 @@ public class InventoryManager : MonoBehaviour
             slot.SetInventoryManager(this);
         }
 
+        if (GlobalControl.Instance != null)
+        {
+            if (GlobalControl.Instance.currentWeapon != null)
+            {
+                GameObject weapon = Instantiate(GlobalControl.Instance.currentWeapon, handgunHolder);
+            }
+
+            for (int i = 0; i < GlobalControl.Instance.savedInventory.Count && i < slots.Length; i++)
+            {
+                var data = GlobalControl.Instance.savedInventory[i];
+                if (data.item != null)
+                {
+                    slots[i].SetItem(data.item, data.quantity);
+                }
+            }
+        }
+
         ClearItemInfo();
         optionsPanel.SetActive(false);
     }
 
     void Update()
     {
-        if (Input.GetButtonDown("Inventory") && !GlobalControl.isPause)
+        if (Input.GetButtonDown("Inventory") && !GlobalControl.Instance.isPause)
         {
             ToggleInventory();
         }
@@ -40,7 +57,7 @@ public class InventoryManager : MonoBehaviour
     void ToggleInventory()
     {
         isInventoryOpen = !isInventoryOpen;
-        GlobalControl.isInventoryOpen = isInventoryOpen;
+        GlobalControl.Instance.isInventoryOpen = isInventoryOpen;
 
         inventoryUI.SetActive(isInventoryOpen);
 
@@ -50,11 +67,14 @@ public class InventoryManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             inventoryOpenSFX.Play();
+
+            ClearItemInfo();
+            optionsPanel.SetActive(false);
         }
         else
         {
             isInventoryOpen = false;
-            GlobalControl.isInventoryOpen = false;
+            GlobalControl.Instance.isInventoryOpen = false;
 
             Time.timeScale = 1f;
             Cursor.lockState = CursorLockMode.Locked;
@@ -76,7 +96,7 @@ public class InventoryManager : MonoBehaviour
     public void CloseInventory()
     {
         isInventoryOpen = false;
-        GlobalControl.isInventoryOpen = false;
+        GlobalControl.Instance.isInventoryOpen = false;
 
         inventoryUI.SetActive(false);
         Time.timeScale = 1f;
@@ -222,6 +242,39 @@ public class InventoryManager : MonoBehaviour
                 equippedGun.transform.localRotation = Quaternion.identity;
 
                 Debug.Log("Equipped: " + item.itemName);
+            }
+        }
+    }
+
+    public void GetCurrentWeapon()
+    {
+        if (handgunHolder.childCount == 0)
+        {
+            Debug.LogWarning("No weapon equipped, so nothing to save, genius.");
+            GlobalControl.Instance.currentWeapon = null;
+            return;
+        }
+
+        Transform w = handgunHolder.GetChild(0);
+        ItemPickup itemRef = w.GetComponent<ItemPickup>();
+
+        GameObject currentWeaponPrefab = itemRef.item.worldPrefab;
+        GlobalControl.Instance.currentWeapon = currentWeaponPrefab;
+    }
+
+    public void GetCurrentInventorySlotData()
+    {
+        GlobalControl.Instance.savedInventory.Clear();
+        foreach (var slot in slots)
+        {
+            if (!slot.IsEmpty)
+            {
+                InventorySlotData data = new InventorySlotData
+                {
+                    item = slot.GetItem(),
+                    quantity = slot.GetQuantity()
+                };
+                GlobalControl.Instance.savedInventory.Add(data);
             }
         }
     }

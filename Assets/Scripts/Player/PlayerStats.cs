@@ -16,7 +16,16 @@ public class PlayerStats : MonoBehaviour
 
     void Start()
     {
-        currentHealth = maxHealth;
+        if (GlobalControl.Instance != null && GlobalControl.Instance.playerHealth > 0)
+        {
+            currentHealth = GlobalControl.Instance.playerHealth;
+            UpdateHealth();
+        }
+        else
+        {
+            currentHealth = maxHealth;
+            UpdateHealth();
+        }
     }
 
     public void TakeDamage(int amount)
@@ -25,6 +34,11 @@ public class PlayerStats : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         Debug.Log("Player took damage! Current HP: " + currentHealth);
 
+        UpdateHealth();
+    }
+
+    void UpdateHealth()
+    {
         if (currentHealth > 50)
         {
             heartBeatMonitor.clip = healthNormal;
