@@ -20,6 +20,6 @@ MonoBehaviour:
   itemType: 0
   worldPrefab: {fileID: 2968313888095361709, guid: 0a667c256cc406540b23dc3906090811, type: 3}
   healAmount: 0
-  fireRate: 0.5
+  fireRate: 1
   maxAmmo: 15
   gunDamage: 30

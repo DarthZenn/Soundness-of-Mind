@@ -761,7 +761,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.4
+  m_Radius: 0.3
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
@@ -820,7 +820,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d7870b4dbf444b48b88516108f60e51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 4890236937653202912, guid: 633adb418eb14cc4cb658bf4c7f384ae, type: 3}
   sightRange: 10
   fieldOfView: 60
   attackRange: 1.25

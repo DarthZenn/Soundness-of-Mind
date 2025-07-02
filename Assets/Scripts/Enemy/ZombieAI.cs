@@ -8,9 +8,8 @@ public class ZombieAI : MonoBehaviour
     private NavMeshAgent agent;
     private Animator animator;
 
-    private float defaultSpeed;
-    [SerializeField] private float sightRange;
-    [SerializeField] private float fieldOfView;
+    public float sightRange;
+    public float fieldOfView;
 
     [SerializeField] private float attackRange;
     [SerializeField] private float stopOffset;
@@ -24,7 +23,7 @@ public class ZombieAI : MonoBehaviour
     private enum State { Idle, Chasing, Attacking }
     private State currentState = State.Idle;
     private PlayerStats playerStats;
-
+    private bool isAttackLocked = false;
 
     void Start()
     {
@@ -33,7 +32,6 @@ public class ZombieAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         attackTimer = 0f;
-        defaultSpeed = agent.speed;
 
         if (playerTransform != null)
         {
@@ -60,7 +58,13 @@ public class ZombieAI : MonoBehaviour
                 break;
         }
 
-        CheckTransitions();
+        if (!isAttackLocked)
+        {
+            CheckTransitions();
+        }
+
+        HandleFailsafe();
+        //Debug.Log(agent.isStopped + " / " + currentState + " / " + isAttacking);
     }
 
     void HandleIdle()
@@ -71,6 +75,8 @@ public class ZombieAI : MonoBehaviour
 
     void HandleChasing()
     {
+        sightRange = 100;
+        fieldOfView = 360;
         Vector3 directionToPlayer = (playerTransform.position - transform.position).normalized;
         Vector3 offsetTarget = playerTransform.position - directionToPlayer * (attackRange - stopOffset);
         agent.SetDestination(offsetTarget);
@@ -89,9 +95,10 @@ public class ZombieAI : MonoBehaviour
 
         if (!isAttacking && attackTimer <= 0f)
         {
-            agent.speed = 0;
             isAttacking = true;
+            isAttackLocked = true;
             attackTimer = attackCooldown;
+            agent.isStopped = true;
             animator.SetTrigger("Attack");
         }
     }
@@ -102,32 +109,20 @@ public class ZombieAI : MonoBehaviour
         Vector3 dirToPlayer = (playerTransform.position - transform.position).normalized;
         float angle = Vector3.Angle(transform.forward, dirToPlayer);
 
-        if (distance <= attackRange && angle <= fieldOfView / 2f)
+        if (distance <= attackRange && angle <= fieldOfView / 2f &&
+            agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
         {
             currentState = State.Attacking;
         }
         else if (distance <= sightRange && angle <= fieldOfView / 2f)
         {
-            sightRange = 100;
-            fieldOfView = 360;
             currentState = State.Chasing;
         }
         else
         {
             currentState = State.Idle;
         }
-
-        if (currentState != State.Attacking)
-        {
-            isAttacking = false;
-
-            if (agent.speed == 0)
-            {
-                agent.speed = defaultSpeed;
-            }
-        }
     }
-
 
     public void DealDamage()
     {
@@ -148,7 +143,17 @@ public class ZombieAI : MonoBehaviour
     public void EndAttack()
     {
         isAttacking = false;
-        agent.speed = defaultSpeed;
+        isAttackLocked = false;
+        agent.isStopped = false;
+    }
+
+    void HandleFailsafe()
+    {
+        if (currentState == State.Chasing && agent.isStopped == true && isAttacking == true)
+        {
+            Debug.LogWarning("Failsafe triggered: Zombie was stuck. Resuming movement.");
+            agent.isStopped = false;
+        }
     }
 
     private void OnDrawGizmosSelected()
