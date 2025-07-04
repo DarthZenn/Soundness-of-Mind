@@ -12,10 +12,8 @@ public class PickupPrompt : MonoBehaviour
         if (promptUI != null)
             promptUI.SetActive(false);
         else
-            Debug.LogError("Prompt UI is not assigned.");
 
-        if (promptText == null)
-            Debug.LogError("Prompt Text is not assigned.");
+        if (promptText == null) ;
     }
 
     private void Update()
@@ -30,7 +28,6 @@ public class PickupPrompt : MonoBehaviour
     {
         if (promptUI == null || promptText == null)
         {
-            Debug.LogWarning("UI references are missing.");
             return;
         }
 
@@ -45,7 +42,6 @@ public class PickupPrompt : MonoBehaviour
     {
         if (promptUI == null || promptText == null)
         {
-            Debug.LogWarning("UI references are missing.");
             return;
         }
 

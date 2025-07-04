@@ -77,7 +77,6 @@ public class GlobalControl : MonoBehaviour
 
         string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(saveFilePath, json);
-        Debug.Log("Game saved at: " + saveFilePath);
     }
 
     public void LoadGame()
@@ -102,11 +101,10 @@ public class GlobalControl : MonoBehaviour
             }
 
             SceneManager.LoadScene(sceneIndex);
-            Debug.Log("Game loaded.");
         }
         else
         {
-            Debug.LogWarning("No save file found, idiot.");
+            Debug.LogWarning("No save file found.");
         }
     }
 }

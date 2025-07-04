@@ -33,12 +33,12 @@ public class InventoryManager : MonoBehaviour
             }
             else
             {
-                Debug.LogError("TankController component missing on player!");
+                Debug.LogError("TankController component missing on player");
             }
         }
         else
         {
-            Debug.LogError("Player not found in scene!");
+            Debug.LogError("Player not found");
         }
 
         foreach (var slot in slots)
@@ -174,7 +174,6 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
-        Debug.Log("Inventory Full! Could not add all of item: " + item.itemName);
         return false;
     }
 
@@ -237,11 +236,10 @@ public class InventoryManager : MonoBehaviour
                     playerHealth.Heal(item.healAmount);
                     selectedSlot.RemoveQuantity(1);
                     playerHealth.UpdateHealth();
-                    Debug.Log("Used healing item: " + item.itemName);
                 }
                 else
                 {
-                    Debug.Log("Player is already at full health. Can't use " + item.itemName);
+                    Debug.Log("Already at full health. Can't use " + item.itemName);
                 }
             }
             return;
@@ -276,7 +274,6 @@ public class InventoryManager : MonoBehaviour
     {
         if (handgunHolder.childCount == 0)
         {
-            Debug.LogWarning("No weapon equipped, so nothing to save, genius.");
             GlobalControl.Instance.currentWeapon = null;
             return;
         }

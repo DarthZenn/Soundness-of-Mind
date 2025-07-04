@@ -148,10 +148,6 @@ public class ZombieAI : MonoBehaviour
             {
                 playerStats.TakeDamage(damage);
             }
-            else
-            {
-                Debug.Log("Player was too far. Attack missed.");
-            }
         }
     }
 
@@ -166,7 +162,6 @@ public class ZombieAI : MonoBehaviour
     {
         if (currentState == State.Chasing && agent.isStopped == true && isAttacking == true)
         {
-            Debug.LogWarning("Failsafe triggered: Zombie was stuck. Resuming movement.");
             agent.isStopped = false;
         }
     }

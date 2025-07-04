@@ -21,7 +21,6 @@ public class SaveController : MonoBehaviour
     {
         if (savePromptUI == null)
         {
-            Debug.LogError("SavePromptUI not assigned. Go fix it.");
             return;
         }
 
@@ -30,7 +29,6 @@ public class SaveController : MonoBehaviour
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        Debug.Log("Save prompt shown. Don’t screw this up.");
     }
 
     public void CloseSavePrompt()
@@ -42,6 +40,5 @@ public class SaveController : MonoBehaviour
         Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        Debug.Log("Save prompt closed. Back to suffering.");
     }
 }

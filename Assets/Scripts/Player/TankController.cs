@@ -168,7 +168,6 @@ public class TankController : MonoBehaviour
                         {
                             fireTimer = item.fireRate;
                             gunEmptyAudio.Play();
-                            Debug.Log("Click! Out of ammo, dummy.");
                         }
                     }
                 }
@@ -186,7 +185,6 @@ public class TankController : MonoBehaviour
     void FireGun()
     {
         currentAmmo--;
-        Debug.Log("Bang! Ammo left: " + currentAmmo);
 
         if (gunAudio != null)
             gunAudio.Play();
@@ -223,12 +221,7 @@ public class TankController : MonoBehaviour
             if (pickup != null && pickup.item != null)
             {
                 targetZombie.TakeDamage(pickup.item.gunDamage);
-                Debug.Log("Zombie hit! Gave it " + pickup.item.gunDamage + " damage.");
             }
-        }
-        else
-        {
-            Debug.Log("You missed. Maybe open your eyes next time, slug.");
         }
     }
 
@@ -236,14 +229,12 @@ public class TankController : MonoBehaviour
     {
         if (currentAmmo == maxAmmo)
         {
-            Debug.Log("Magazine already full, dumbass.");
             return;
         }
 
         InventoryManager manager = FindObjectOfType<InventoryManager>();
         if (manager == null)
         {
-            Debug.LogWarning("InventoryManager not found. You forgot to put it in the scene, didn't you?");
             return;
         }
 
@@ -275,11 +266,6 @@ public class TankController : MonoBehaviour
         {
             currentAmmo += collected;
             currentAmmo = Mathf.Clamp(currentAmmo, 0, maxAmmo);
-            Debug.Log($"Reloaded {collected} bullets. Ammo now: {currentAmmo}/{maxAmmo}");
-        }
-        else
-        {
-            Debug.Log("No spare ammo to reload, loser.");
         }
     }
 

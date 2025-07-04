@@ -35,7 +35,6 @@ public class PlayerStats : MonoBehaviour
     {
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-        Debug.Log("Player took damage! Current HP: " + currentHealth);
 
         UpdateHealth();
     }
@@ -74,13 +73,11 @@ public class PlayerStats : MonoBehaviour
     {
         if (currentHealth >= maxHealth)
         {
-            Debug.Log("Player is already at full health. Healing ignored.");
             return;
         }
 
         currentHealth += amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-        Debug.Log("Player healed. Current HP: " + currentHealth);
     }
 
     IEnumerator PlayDieAnim()
@@ -94,7 +91,7 @@ public class PlayerStats : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("No Animator found on Player. Nice job, genius.");
+            Debug.LogWarning("No Animator found on Player. You fucking Piece of Son of Stupid Biatch");
         }
 
         yield return new WaitForSeconds(2.3f);

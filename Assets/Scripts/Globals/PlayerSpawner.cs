@@ -17,7 +17,6 @@ public class PlayerSpawner : MonoBehaviour
         {
             Instantiate(playerPrefab, GlobalControl.Instance.playerPosition, Quaternion.identity);
             GlobalControl.Instance.hasLoadedSave = false;
-            Debug.Log("Player spawned at saved position.");
             return;
         }
 
@@ -29,11 +28,8 @@ public class PlayerSpawner : MonoBehaviour
             if (spawn.spawnID == spawnID)
             {
                 Instantiate(playerPrefab, spawn.transform.position, spawn.transform.rotation);
-                Debug.Log($"Player spawned at spawn point: {spawnID}");
                 return;
             }
         }
-
-        Debug.LogWarning("No matching spawn point found! Player not spawned.");
     }
 }

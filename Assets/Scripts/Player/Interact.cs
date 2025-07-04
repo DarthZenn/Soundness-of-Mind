@@ -11,8 +11,6 @@ public class Interact : MonoBehaviour
     private void Start()
     {
         pickupPrompt = FindObjectOfType<PickupPrompt>();
-        if (pickupPrompt == null)
-            Debug.LogError("No PickupPrompt found in scene. You're useless.");
     }
 
     private void Update()
@@ -36,7 +34,6 @@ public class Interact : MonoBehaviour
                     else
                     {
                         pickupPrompt.ShowPromptFull();
-                        Debug.Log("Inventory full. You're full of excuses too.");
                     }
                 }
             }
@@ -47,11 +44,6 @@ public class Interact : MonoBehaviour
                 if (doorAnim != null)
                 {
                     doorAnim.SetTrigger("Open");
-                    Debug.Log("Door opened. Shockingly functional.");
-                }
-                else
-                {
-                    Debug.LogWarning("Door has no Animator. You have no future.");
                 }
             }
 
@@ -61,11 +53,6 @@ public class Interact : MonoBehaviour
                 if (sceneDoor != null)
                 {
                     StartCoroutine(sceneDoor.SwitchScene());
-                    Debug.Log("Scene switching...");
-                }
-                else
-                {
-                    Debug.Log("SceneDoor broken. Like your confidence.");
                 }
             }
 
