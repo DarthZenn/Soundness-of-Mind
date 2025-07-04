@@ -11,9 +11,6 @@ public class PickupPrompt : MonoBehaviour
     {
         if (promptUI != null)
             promptUI.SetActive(false);
-        else
-
-        if (promptText == null) ;
     }
 
     private void Update()
