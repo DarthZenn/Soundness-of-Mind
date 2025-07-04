@@ -97,7 +97,7 @@ public class PlayerStats : MonoBehaviour
             Debug.LogWarning("No Animator found on Player. Nice job, genius.");
         }
 
-        yield return new WaitForSeconds(2.3f); // Adjust this to match your animation
+        yield return new WaitForSeconds(2.3f);
 
         PlayerDie playerDie = FindObjectOfType<PlayerDie>();
         if (playerDie != null)

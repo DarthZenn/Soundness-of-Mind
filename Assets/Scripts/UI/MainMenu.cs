@@ -31,9 +31,10 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(WaitForFadeScreen());
     }
 
-    public void SettingsButton()
+    public void ContinueButton()
     {
         buttonSound.Play();
+        StartCoroutine(WaitForFadeScreenContinue());
     }
 
     public void ExitButton()
@@ -47,6 +48,13 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(fadeScreen.FadeScreenOut());
         yield return new WaitForSeconds(2);
         SceneManager.LoadScene(1);
+    }
+
+    IEnumerator WaitForFadeScreenContinue()
+    {
+        StartCoroutine(fadeScreen.FadeScreenOut());
+        yield return new WaitForSeconds(2);
+        GlobalControl.Instance.LoadGame();
     }
 
     IEnumerator Dancing()

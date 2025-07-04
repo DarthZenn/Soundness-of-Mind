@@ -12,13 +12,15 @@ public class Interact : MonoBehaviour
     {
         pickupPrompt = FindObjectOfType<PickupPrompt>();
         if (pickupPrompt == null)
-            Debug.LogError("No pickupPrompt found in scene.");
+            Debug.LogError("No PickupPrompt found in scene. You're useless.");
     }
 
     private void Update()
     {
-        if (objectInRange != null && Input.GetButtonDown("Interact") && !pickupPrompt.IsPromptActive())
+        if (objectInRange != null && Input.GetButtonDown("Interact"))
         {
+            if (pickupPrompt != null && pickupPrompt.IsPromptActive()) return;
+
             if (objectInRange.CompareTag("Pickable"))
             {
                 ItemPickup pickup = objectInRange.GetComponent<ItemPickup>();
@@ -34,7 +36,7 @@ public class Interact : MonoBehaviour
                     else
                     {
                         pickupPrompt.ShowPromptFull();
-                        Debug.Log("Inventory full, nerd.");
+                        Debug.Log("Inventory full. You're full of excuses too.");
                     }
                 }
             }
@@ -45,11 +47,11 @@ public class Interact : MonoBehaviour
                 if (doorAnim != null)
                 {
                     doorAnim.SetTrigger("Open");
-                    Debug.Log("Door opening...");
+                    Debug.Log("Door opened. Shockingly functional.");
                 }
                 else
                 {
-                    Debug.LogWarning("Door has no Animator. Just like your ideas have no depth.");
+                    Debug.LogWarning("Door has no Animator. You have no future.");
                 }
             }
 
@@ -59,12 +61,18 @@ public class Interact : MonoBehaviour
                 if (sceneDoor != null)
                 {
                     StartCoroutine(sceneDoor.SwitchScene());
-                    Debug.Log("Switching scene...");
+                    Debug.Log("Scene switching...");
                 }
                 else
                 {
-                    Debug.Log("SceneDoor missing. Like your common sense.");
+                    Debug.Log("SceneDoor broken. Like your confidence.");
                 }
+            }
+
+            else if (objectInRange.CompareTag("Saver"))
+            {
+                SaveController saveController = FindObjectOfType<SaveController>();
+                saveController.ShowSavePrompt();
             }
 
             objectInRange = null;
@@ -73,7 +81,8 @@ public class Interact : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Pickable") || other.CompareTag("Door") || other.CompareTag("SceneDoor"))
+        if (other.CompareTag("Pickable") || other.CompareTag("Door") ||
+            other.CompareTag("SceneDoor") || other.CompareTag("Saver"))
         {
             objectInRange = other.gameObject;
         }

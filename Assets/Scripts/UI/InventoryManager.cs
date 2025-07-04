@@ -69,7 +69,8 @@ public class InventoryManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonDown("Inventory") && !GlobalControl.Instance.isPause && !GlobalControl.Instance.isPrompt && !GlobalControl.Instance.isGameOver)
+        if (Input.GetButtonDown("Inventory") && !GlobalControl.Instance.isPause
+            && !GlobalControl.Instance.isPrompt && !GlobalControl.Instance.isGameOver && !GlobalControl.Instance.isSaving)
         {
             ToggleInventory();
         }

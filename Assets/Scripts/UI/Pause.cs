@@ -11,7 +11,8 @@ public class Pause : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonDown("Cancel") && !GlobalControl.Instance.isInventoryOpen && !GlobalControl.Instance.isPrompt && !GlobalControl.Instance.isGameOver)
+        if (Input.GetButtonDown("Cancel") && !GlobalControl.Instance.isInventoryOpen
+            && !GlobalControl.Instance.isPrompt && !GlobalControl.Instance.isGameOver && !GlobalControl.Instance.isSaving)
         {
             if (GlobalControl.Instance.isPause)
                 ResumeGame();
@@ -44,6 +45,18 @@ public class Pause : MonoBehaviour
     public void LoadGameButton()
     {
         buttonSound.Play();
+        pauseMenuUI.SetActive(false);
+        Time.timeScale = 1f;
+        GlobalControl.Instance.playerHealth = 0;
+        GlobalControl.Instance.currentAmmo = 0;
+        GlobalControl.Instance.savedInventory.Clear();
+        GlobalControl.Instance.currentWeapon = null;
+        GlobalControl.Instance.destinationSpawnID = null;
+        GlobalControl.Instance.isInventoryOpen = false;
+        GlobalControl.Instance.isPause = false;
+        GlobalControl.Instance.isPrompt = false;
+        GlobalControl.Instance.isGameOver = false;
+        GlobalControl.Instance.LoadGame();
     }
 
     public void SettingsButton()

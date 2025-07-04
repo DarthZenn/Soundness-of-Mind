@@ -35,12 +35,26 @@ public class PlayerDie : MonoBehaviour
 
     public void LoadGameButton()
     {
+        isGameOver = false;
+        gameOver.SetActive(false);
+        GlobalControl.Instance.playerHealth = 0;
+        GlobalControl.Instance.currentAmmo = 0;
+        GlobalControl.Instance.savedInventory.Clear();
+        GlobalControl.Instance.currentWeapon = null;
+        GlobalControl.Instance.destinationSpawnID = null;
+        GlobalControl.Instance.isInventoryOpen = false;
+        GlobalControl.Instance.isPause = false;
+        GlobalControl.Instance.isPrompt = false;
+        GlobalControl.Instance.isGameOver = false;
         buttonSound.Play();
+        Time.timeScale = 1f;
+        GlobalControl.Instance.LoadGame();
     }
 
     public void MainMenuButton()
     {
         isGameOver = false;
+        gameOver.SetActive(false);
         GlobalControl.Instance.playerHealth = 0;
         GlobalControl.Instance.currentAmmo = 0;
         GlobalControl.Instance.savedInventory.Clear();

@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 
 public class PlayerSpawner : MonoBehaviour
@@ -10,9 +8,16 @@ public class PlayerSpawner : MonoBehaviour
 
     void Start()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
+        if (GameObject.FindGameObjectWithTag("Player") != null)
         {
+            return;
+        }
+
+        if (GlobalControl.Instance.hasLoadedSave)
+        {
+            Instantiate(playerPrefab, GlobalControl.Instance.playerPosition, Quaternion.identity);
+            GlobalControl.Instance.hasLoadedSave = false;
+            Debug.Log("Player spawned at saved position.");
             return;
         }
 

@@ -11,7 +11,18 @@ public class CameraLookAtTarget : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (target == null) return;
+        if (target == null)
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                target = player.transform;
+            }
+            else
+            {
+                return;
+            }
+        }
 
         Vector3 direction = target.position - transform.position;
         Quaternion targetRotation = Quaternion.LookRotation(direction);
