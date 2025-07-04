@@ -14,6 +14,9 @@ public class ZombieStats : MonoBehaviour
     private bool isDead = false;
     private ZombieAI zombieAI;
 
+    [SerializeField] private AudioSource zombieHurtAudio;
+    [SerializeField] private AudioSource zombieFallAudio;
+
     void Start()
     {
         currentHP = maxHP;
@@ -34,6 +37,10 @@ public class ZombieStats : MonoBehaviour
         }
         else
         {
+            if (zombieHurtAudio != null)
+            {
+                zombieHurtAudio.Play();
+            }
             animator.SetTrigger("Hit");
             agent.isStopped = true;
             zombieAI.sightRange = 100;
@@ -54,6 +61,14 @@ public class ZombieStats : MonoBehaviour
         agent.enabled = false;
 
         Destroy(gameObject, 5f);
+    }
+
+    public void ZombieFall()
+    {
+        if (zombieFallAudio != null)
+        {
+            zombieFallAudio.Play();
+        }
     }
 
     public bool IsDead() => isDead;

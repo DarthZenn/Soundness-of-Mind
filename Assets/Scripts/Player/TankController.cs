@@ -19,6 +19,8 @@ public class TankController : MonoBehaviour
     private bool isAiming = false;
     [SerializeField] private AudioSource gunAudio;
     [SerializeField] private AudioSource gunEmptyAudio;
+    [SerializeField] private AudioSource gunReloadAudio;
+    [SerializeField] private AudioSource footStepAudio;
     private float fireTimer;
     private int currentAmmo;
     private int reserveAmmo;
@@ -29,6 +31,9 @@ public class TankController : MonoBehaviour
 
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = false;
+
         anim = player.GetComponent<Animator>();
 
         if (GlobalControl.Instance != null && GlobalControl.Instance.currentAmmo >= 0)
@@ -242,6 +247,9 @@ public class TankController : MonoBehaviour
             return;
         }
 
+        if (gunReloadAudio != null)
+            gunReloadAudio.Play();
+
         int needed = maxAmmo - currentAmmo;
         int collected = 0;
 
@@ -326,6 +334,14 @@ public class TankController : MonoBehaviour
 
             Quaternion targetRotation = Quaternion.LookRotation(targetDir);
             player.transform.rotation = Quaternion.Slerp(player.transform.rotation, targetRotation, Time.deltaTime * 10f);
+        }
+    }
+
+    public void PlayFootStepSound()
+    {
+        if (footStepAudio != null)
+        {
+            footStepAudio.Play();
         }
     }
 

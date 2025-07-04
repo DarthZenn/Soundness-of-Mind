@@ -1,30 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Interact : MonoBehaviour
 {
     private GameObject objectInRange;
+    private PickupPrompt pickupPrompt;
+
+    private void Start()
+    {
+        pickupPrompt = FindObjectOfType<PickupPrompt>();
+        if (pickupPrompt == null)
+            Debug.LogError("No pickupPrompt found in scene.");
+    }
 
     private void Update()
     {
-        if (objectInRange != null && Input.GetButtonDown("Interact"))
+        if (objectInRange != null && Input.GetButtonDown("Interact") && !pickupPrompt.IsPromptActive())
         {
             if (objectInRange.CompareTag("Pickable"))
             {
                 ItemPickup pickup = objectInRange.GetComponent<ItemPickup>();
                 if (pickup != null)
                 {
-                    Debug.Log("Picked up: " + pickup.item.itemName);
                     bool added = FindObjectOfType<InventoryManager>().AddItem(pickup.item);
 
                     if (added)
                     {
+                        pickupPrompt.ShowPrompt(pickup.item.itemName, pickup.item.quantityPerPickup);
                         Destroy(objectInRange);
                     }
                     else
                     {
-                        Debug.Log("Could not pick up item. Inventory full!");
+                        pickupPrompt.ShowPromptFull();
+                        Debug.Log("Inventory full, nerd.");
                     }
                 }
             }
@@ -39,7 +49,7 @@ public class Interact : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogWarning("Door object has no Animator, you brainless buffoon.");
+                    Debug.LogWarning("Door has no Animator. Just like your ideas have no depth.");
                 }
             }
 
@@ -49,11 +59,11 @@ public class Interact : MonoBehaviour
                 if (sceneDoor != null)
                 {
                     StartCoroutine(sceneDoor.SwitchScene());
-                    Debug.Log("Switching Scene...");
+                    Debug.Log("Switching scene...");
                 }
                 else
                 {
-                    Debug.Log("U ain't going no where. Come over here and kiss me on my hot mouth.");
+                    Debug.Log("SceneDoor missing. Like your common sense.");
                 }
             }
 

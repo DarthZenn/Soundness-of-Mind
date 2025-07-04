@@ -16,6 +16,9 @@ public class SceneDoor : MonoBehaviour
     private GameObject currentWeapon;
     private int currentAmmo;
     private InventoryManager inventoryManager;
+    private PlayerSpawnPoint playerSpawnPoint;
+    private GameObject player;
+    [SerializeField] private string destinationSpawnID;
 
     public IEnumerator SwitchScene()
     {
@@ -32,6 +35,8 @@ public class SceneDoor : MonoBehaviour
 
         inventoryManager.GetCurrentInventorySlotData();
         inventoryManager.GetCurrentWeapon();
+
+        GlobalControl.Instance.destinationSpawnID = destinationSpawnID;
 
         if (doorTransition != null)
         {
@@ -66,6 +71,8 @@ public class SceneDoor : MonoBehaviour
             yield return new WaitForSeconds(doorCloseSound.clip.length);
         }
 
+        player = GameObject.FindGameObjectWithTag("Player");
+        Destroy(player);
         SceneManager.LoadScene(sceneIndex);
     }
 }

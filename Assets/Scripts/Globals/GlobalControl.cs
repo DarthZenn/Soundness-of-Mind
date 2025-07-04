@@ -12,8 +12,12 @@ public class GlobalControl : MonoBehaviour
     public List<InventorySlotData> savedInventory = new List<InventorySlotData>();
     public GameObject currentWeapon;
 
+    public string destinationSpawnID;
+
     public bool isInventoryOpen = false;
     public bool isPause = false;
+    public bool isPrompt = false;
+    public bool isGameOver = false;
 
     void Awake()
     {

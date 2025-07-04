@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
@@ -7,19 +8,39 @@ public class InventoryManager : MonoBehaviour
     public GameObject inventoryUI;
     public AudioSource inventoryOpenSFX;
     public AudioSource inventoryCloseSFX;
+    public AudioSource buttonSound;
 
     public InventorySlot[] slots;
-    public TMPro.TextMeshProUGUI itemNameText;
-    public TMPro.TextMeshProUGUI itemDescriptionText;
+    public TextMeshProUGUI itemNameText;
+    public TextMeshProUGUI itemDescriptionText;
     public GameObject optionsPanel;
 
-    public Transform handgunHolder;
+    private Transform handgunHolder;
 
     private bool isInventoryOpen = false;
     private InventorySlot selectedSlot;
 
     void Start()
     {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+
+        if (player != null)
+        {
+            TankController tankController = player.GetComponent<TankController>();
+            if (tankController != null)
+            {
+                handgunHolder = tankController.handgunHolder;
+            }
+            else
+            {
+                Debug.LogError("TankController component missing on player!");
+            }
+        }
+        else
+        {
+            Debug.LogError("Player not found in scene!");
+        }
+
         foreach (var slot in slots)
         {
             slot.SetInventoryManager(this);
@@ -48,7 +69,7 @@ public class InventoryManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonDown("Inventory") && !GlobalControl.Instance.isPause)
+        if (Input.GetButtonDown("Inventory") && !GlobalControl.Instance.isPause && !GlobalControl.Instance.isPrompt && !GlobalControl.Instance.isGameOver)
         {
             ToggleInventory();
         }
@@ -98,6 +119,7 @@ public class InventoryManager : MonoBehaviour
         isInventoryOpen = false;
         GlobalControl.Instance.isInventoryOpen = false;
 
+        buttonSound.Play();
         inventoryUI.SetActive(false);
         Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.Locked;
@@ -179,6 +201,8 @@ public class InventoryManager : MonoBehaviour
 
     public void SetSelectedSlot(InventorySlot slot)
     {
+        buttonSound.Play();
+
         if (selectedSlot != null)
         {
             selectedSlot.SetSelected(false);
@@ -192,9 +216,9 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-
     public void UseSelectedItem()
     {
+        buttonSound.Play();
         if (selectedSlot == null || selectedSlot.IsEmpty) return;
 
         ItemData item = selectedSlot.GetItem();
@@ -211,6 +235,7 @@ public class InventoryManager : MonoBehaviour
                 {
                     playerHealth.Heal(item.healAmount);
                     selectedSlot.RemoveQuantity(1);
+                    playerHealth.UpdateHealth();
                     Debug.Log("Used healing item: " + item.itemName);
                 }
                 else

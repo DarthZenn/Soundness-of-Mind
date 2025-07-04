@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.Video;
 
 public class PlayerStats : MonoBehaviour
@@ -13,6 +14,8 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private VideoClip healthNormal;
     [SerializeField] private VideoClip healthDangerous;
     [SerializeField] private VideoClip healthCritical;
+
+    private PostProcessController pp;
 
     void Start()
     {
@@ -37,7 +40,7 @@ public class PlayerStats : MonoBehaviour
         UpdateHealth();
     }
 
-    void UpdateHealth()
+    public void UpdateHealth()
     {
         if (currentHealth > 50)
         {
@@ -60,7 +63,7 @@ public class PlayerStats : MonoBehaviour
 
     void Die()
     {
-        Debug.Log("Player is dead. GG no re.");
+        StartCoroutine(PlayDieAnim());
     }
 
     public int GetCurrentHealth() => currentHealth;
@@ -78,5 +81,29 @@ public class PlayerStats : MonoBehaviour
         currentHealth += amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         Debug.Log("Player healed. Current HP: " + currentHealth);
+    }
+
+    IEnumerator PlayDieAnim()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Animator playerAnimator = player.GetComponent<Animator>();
+
+        if (playerAnimator != null)
+        {
+            playerAnimator.SetTrigger("Die");
+        }
+        else
+        {
+            Debug.LogWarning("No Animator found on Player. Nice job, genius.");
+        }
+
+        yield return new WaitForSeconds(2.3f); // Adjust this to match your animation
+
+        PlayerDie playerDie = FindObjectOfType<PlayerDie>();
+        if (playerDie != null)
+        {
+            Time.timeScale = 0f;
+            playerDie.HandleGameOver();
+        }
     }
 }

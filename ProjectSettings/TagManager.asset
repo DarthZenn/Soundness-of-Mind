@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Door
   - SceneDoor
+  - Saver
   layers:
   - Default
   - TransparentFX

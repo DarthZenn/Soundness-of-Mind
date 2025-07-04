@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.AI;
 
 public class ZombieAI : MonoBehaviour
@@ -25,22 +26,32 @@ public class ZombieAI : MonoBehaviour
     private PlayerStats playerStats;
     private bool isAttackLocked = false;
 
+    [SerializeField] private AudioSource zombieAttackAudio;
+
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
-        playerTransform = player.transform;
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         attackTimer = 0f;
-
-        if (playerTransform != null)
-        {
-            playerStats = playerTransform.GetComponent<PlayerStats>();
-        }
     }
 
     void Update()
     {
+        if (playerTransform == null)
+        {
+            player = GameObject.FindGameObjectWithTag("Player");
+
+            if (player != null)
+            {
+                playerTransform = player.transform;
+                playerStats = player.GetComponent<PlayerStats>();
+            }
+            else
+            {
+                return;
+            }
+        }
+
         if (playerTransform == null) return;
 
         attackTimer -= Time.deltaTime;
@@ -95,6 +106,10 @@ public class ZombieAI : MonoBehaviour
 
         if (!isAttacking && attackTimer <= 0f)
         {
+            if (zombieAttackAudio != null)
+            {
+                zombieAttackAudio.Play();
+            }
             isAttacking = true;
             isAttackLocked = true;
             attackTimer = attackCooldown;
