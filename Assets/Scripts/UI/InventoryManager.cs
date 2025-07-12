@@ -249,7 +249,7 @@ public class InventoryManager : MonoBehaviour
         {
             Transform existingGun = handgunHolder.childCount > 0 ? handgunHolder.GetChild(0) : null;
 
-            if (existingGun != null && existingGun.name.Contains(item.worldPrefab.name))
+            if (existingGun != null && existingGun.name.Contains(item.inventoryPrefab.name))
             {
                 Destroy(existingGun.gameObject);
                 Debug.Log("Unequipped: " + item.itemName);
@@ -261,13 +261,74 @@ public class InventoryManager : MonoBehaviour
                     Destroy(child.gameObject);
                 }
 
-                GameObject equippedGun = Instantiate(item.worldPrefab, handgunHolder);
+                GameObject equippedGun = Instantiate(item.inventoryPrefab, handgunHolder);
                 equippedGun.transform.localPosition = Vector3.zero;
                 equippedGun.transform.localRotation = Quaternion.identity;
 
                 Debug.Log("Equipped: " + item.itemName);
             }
         }
+    }
+
+    public void DropSelectedItem()
+    {
+        buttonSound.Play();
+
+        if (selectedSlot == null || selectedSlot.IsEmpty)
+        {
+            Debug.Log("Nothing to drop.");
+            return;
+        }
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player == null)
+        {
+            Debug.LogError("Player not found.");
+            return;
+        }
+
+        ItemData item = selectedSlot.GetItem();
+        int quantity = selectedSlot.GetQuantity();
+
+        if (item.itemType == ItemType.Handgun && handgunHolder.childCount > 0)
+        {
+            Transform equipped = handgunHolder.GetChild(0);
+            ItemPickup equippedPickup = equipped.GetComponent<ItemPickup>();
+
+            if (equippedPickup != null && equippedPickup.item == item)
+            {
+                Destroy(equipped.gameObject);
+                Debug.Log("Unequipped gun before dropping it.");
+            }
+        }
+
+        Vector3 dropPosition = player.transform.position;
+
+        if (item.worldPrefab != null)
+        {
+            GameObject droppedItem = Instantiate(item.worldPrefab, dropPosition, Quaternion.identity);
+            ItemPickup pickup = droppedItem.GetComponent<ItemPickup>();
+
+            if (pickup != null)
+            {
+                pickup.item = item;
+                pickup.item.quantityPerPickup = quantity;
+            }
+            else
+            {
+                Debug.LogWarning("Dropped item is missing ItemPickup component.");
+            }
+
+            Debug.Log($"Dropped: {item.itemName} x{quantity}");
+        }
+        else
+        {
+            Debug.LogWarning("No worldPrefab assigned.");
+        }
+
+        selectedSlot.ClearSlot();
+        ClearItemInfo();
+        optionsPanel.SetActive(false);
     }
 
     public void GetCurrentWeapon()
@@ -281,7 +342,7 @@ public class InventoryManager : MonoBehaviour
         Transform w = handgunHolder.GetChild(0);
         ItemPickup itemRef = w.GetComponent<ItemPickup>();
 
-        GameObject currentWeaponPrefab = itemRef.item.worldPrefab;
+        GameObject currentWeaponPrefab = itemRef.item.inventoryPrefab;
         GlobalControl.Instance.currentWeapon = currentWeaponPrefab;
     }
 

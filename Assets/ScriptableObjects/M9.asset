@@ -18,8 +18,9 @@ MonoBehaviour:
   maxStack: 1
   quantityPerPickup: 1
   itemType: 0
-  worldPrefab: {fileID: 2968313888095361709, guid: 0a667c256cc406540b23dc3906090811, type: 3}
+  worldPrefab: {fileID: 2968313888095361709, guid: d2ee33a1b5dd6c24aa50bc70a8bc9c4b, type: 3}
   healAmount: 0
   fireRate: 1
   maxAmmo: 15
   gunDamage: 30
+  inventoryPrefab: {fileID: 2968313888095361709, guid: 0a667c256cc406540b23dc3906090811, type: 3}

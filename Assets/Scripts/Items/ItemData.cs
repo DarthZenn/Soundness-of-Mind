@@ -19,6 +19,7 @@ public class ItemData : ScriptableObject
     public int maxStack = 1;
     public int quantityPerPickup = 1;
     public ItemType itemType;
+    public GameObject inventoryPrefab;
     public GameObject worldPrefab;
 
     [Header("Consumable Settings")]
